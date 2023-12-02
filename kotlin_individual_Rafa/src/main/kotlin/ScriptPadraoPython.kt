@@ -15,58 +15,59 @@ object ScriptPadraoPython {
         from mysql.connector import connect
         from datetime import datetime
 
-        banco_user = '$bancoUser'
-        banco_senha = '$bancoSenha'
-        id_maquina_dado = '$idMaquinaDado'
+        mysql_cnx = connect(user='$bancoUser', password='$bancoSenha', host='localhost', database='centrix')
 
-        mysql_cnx = connect(user=banco_user, password=banco_senha, host='localhost', database='centrix')
         sql_server_cnx = pymssql.connect(server='44.197.21.59', database='centrix', user='sa', password='centrix')
 
         while True:
-            try:
             
-                data_e_hora_atuais = datetime.now()
-                data_atual = data_e_hora_atuais.date()
-                hora_atual = data_e_hora_atuais.time()
+            data_e_hora_atuais = datetime.now()
+            data_atual = data_e_hora_atuais.date()
+            hora_atual = data_e_hora_atuais.time()
 
-                CPU = round(psutil.cpu_percent(), 2)
-                RAM = round(psutil.virtual_memory().used / (1024**3), 3)
-                DISK = round(psutil.disk_usage('/').used / (1024**3), 3)
+            CPU = round(psutil.cpu_percent(), 2)
+            RAM = round(psutil.virtual_memory().used / (1024**3), 3)
+            DISK = round(psutil.disk_usage('/').used / (1024**3), 3)
 
-                bd_local_cursor = mysql_cnx.cursor()
-  
-                bd_local_cursor.execute("INSERT INTO Monitoramento (Data_captura, Hora_captura, Dado_Capturado, fkCompMonitorados, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                                        (data_atual, hora_atual, CPU, 1, 1, id_maquina_dado, id_maquina_dado))
+            bdLocal_cursor = mysql_cnx.cursor()
+            add_leitura_CPU = (
+                "INSERT INTO Monitoramento"
+                "(Data_captura, Hora_captura, Dado_Capturado, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni)"
+                "VALUES (%s, %s, %s, %s, %s, %s)"
+            )
+            bdLocal_cursor.execute(add_leitura_CPU, (data_atual, hora_atual, CPU, 1, $idMaquinaDado, $idEmpresaDado))
 
-                bd_local_cursor.execute("INSERT INTO Monitoramento (Data_captura, Hora_captura, Dado_Capturado, fkCompMonitorados, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                                        (data_atual, hora_atual, RAM, 3, 3, id_maquina_dado, id_maquina_dado))
+            add_leitura_RAM = (
+                "INSERT INTO Monitoramento"
+                "(Data_captura, Hora_captura, Dado_Capturado, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni)"
+                "VALUES (%s, %s, %s, %s, %s, %s)"
+            )
+            bdLocal_cursor.execute(add_leitura_RAM, (data_atual, hora_atual, RAM, 3, $idMaquinaDado, $idEmpresaDado))
 
-                bd_local_cursor.execute("INSERT INTO Monitoramento (Data_captura, Hora_captura, Dado_Capturado, fkCompMonitorados, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                                        (data_atual, hora_atual, DISK, 2, 2, id_maquina_dado, id_maquina_dado))
+            add_leitura_DISK = (
+                "INSERT INTO Monitoramento"
+                "(Data_captura, Hora_captura, Dado_Capturado, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni)"
+                "VALUES (%s, %s, %s, %s, %s, %s)"
+            )
+            
+            bdLocal_cursor.execute(add_leitura_DISK, (data_atual, hora_atual, DISK, 2, $idMaquinaDado, $idEmpresaDado))
+            bdLocal_cursor.close()
 
-                bd_local_cursor.close()
-                mysql_cnx.commit()
+            mysql_cnx.commit()
 
-                bd_server_cursor = sql_server_cnx.cursor()
+            bdServer_cursor = sql_server_cnx.cursor()
+            
+            bdServer_cursor.execute(add_leitura_CPU, (str(data_atual), str(hora_atual), CPU, 1, $idMaquinaDado, $idEmpresaDado))
 
-                bd_server_cursor.execute("INSERT INTO Monitoramento (Data_captura, Hora_captura, Dado_Capturado, fkCompMonitorados, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                                        (str(data_atual), str(hora_atual), CPU, 1, 1, id_maquina_dado, id_maquina_dado))
+            bdServer_cursor.execute(add_leitura_RAM, (str(data_atual), str(hora_atual), RAM, 3, $idMaquinaDado, $idEmpresaDado))
 
-                bd_server_cursor.execute("INSERT INTO Monitoramento (Data_captura, Hora_captura, Dado_Capturado, fkCompMonitorados, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                                        (str(data_atual), str(hora_atual), RAM, 2, 3, id_maquina_dado, id_maquina_dado))
+            bdServer_cursor.execute(add_leitura_DISK, (str(data_atual), str(hora_atual), DISK, 2, $idMaquinaDado, $idEmpresaDado))
+            
+            bdServer_cursor.close()
 
-                bd_server_cursor.execute("INSERT INTO Monitoramento (Data_captura, Hora_captura, Dado_Capturado, fkCompMonitorados, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                                        (str(data_atual), str(hora_atual), DISK, 3, 2, id_maquina_dado, id_maquina_dado))
+            sql_server_cnx.commit()
 
-                bd_server_cursor.close()
-                sql_server_cnx.commit()
-
-                time.sleep(20)
-
-            except Exception as e:
-                print(f"Ocorreu um erro: {e}")
-
-
+            time.sleep(20)
     """.trimIndent()
 
         val codigoPythonDefaultRede = """
@@ -76,66 +77,64 @@ object ScriptPadraoPython {
             import pymssql
             from datetime import datetime
 
-            banco_user = '$bancoUser'
-            banco_senha = '$bancoSenha'
-            id_maquina_dado = '$idMaquinaDado'
-            id_empresa_dado = '$idEmpresaDado'
-
-            
-            cnx = connect(user=banco_user, password=banco_senha, host='localhost', database='centrix')
-            sql_server_cnx = pymssql.connect(server='44.197.21.59', database='centrix', user='sa', password='centrix')
-
+            cnx = connect(user='$bancoUser', password='${bancoSenha}', host='localhost', database='centrix')
             speed_test = st.Speedtest()
 
-            while True:
-                try:
-                    download = speed_test.download()
-                    download_mbs = round(download / (10**6), 2)
+            sql_server_cnx = pymssql.connect(server='44.197.21.59', database='centrix', user='sa', password='centrix');
 
-                    upload = speed_test.upload()
-                    upload_mbs = round(upload / (10**6), 2)
+            while(True):
+                download = speed_test.download()
+                download_mbs = round(download / (10**6), 2)
+                            
+                upload = speed_test.upload()
+                upload_mbs = round(upload / (10**6), 2)
+                
+                latencia = speed_test.results.ping
+                
+                data_e_hora_atuais = datetime.now()
+                data_atual = data_e_hora_atuais.date()
+                hora_atual = data_e_hora_atuais.time()
+                            
+                bd = cnx.cursor()
+                bdServer_cursor = sql_server_cnx.cursor()
+                            
+                dados_DOWNLOAD_PC = [download_mbs, 5, $idMaquinaDado, $idEmpresaDado]
 
-                    latencia = speed_test.results.ping
+                add_leitura_DOWNLOAD = ("INSERT INTO Monitoramento"
+                                       "(Data_captura, Hora_captura, Dado_Capturado, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni)"
+                                       "VALUES (%s, %s, %s, %s, %s, %s)")
+                           
+                bd.execute(add_leitura_DOWNLOAD, (data_atual, hora_atual, download_mbs, 5, $idMaquinaDado, $idEmpresaDado))
+                bdServer_cursor.execute(add_leitura_DOWNLOAD, (str(data_atual), str(hora_atual), download_mbs, 5, $idMaquinaDado, $idEmpresaDado))
+                            
+               
+                dados_UPLOAD_PC = [upload_mbs, 6, $idMaquinaDado, $idEmpresaDado]
 
-                    data_e_hora_atuais = datetime.now()
-                    data_atual = data_e_hora_atuais.date()
-                    hora_atual = data_e_hora_atuais.time()
+                add_leitura_UPLOAD = ("INSERT INTO Monitoramento"
+                                     "(Data_captura, Hora_captura, Dado_Capturado, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni)"
+                                     "VALUES (%s, %s, %s, %s, %s, %s)")
+                            
+                bd.execute(add_leitura_UPLOAD, (data_atual, hora_atual, upload_mbs, 6, $idMaquinaDado, $idEmpresaDado))
 
-                   
-                    bd_cursor = cnx.cursor()
+                bdServer_cursor.execute(add_leitura_UPLOAD, (str(data_atual), str(hora_atual), upload_mbs, 6, $idMaquinaDado, $idEmpresaDado))
+                
+                dados_LATENCIA_PC = [latencia, 9, $idMaquinaDado, $idEmpresaDado]
+                
+                add_leitura_LATENCIA = ("INSERT INTO Monitoramento"
+                                      "(Data_captura, Hora_captura, Dado_Capturado, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni)"
+                                      "VALUES (%s, %s, %s, %s, %s, %s)")
+                            
+                bd.execute(add_leitura_LATENCIA, (data_atual, hora_atual, upload_mbs, 9, $idMaquinaDado, $idEmpresaDado))
+                
+                bdServer_cursor.execute(add_leitura_LATENCIA, (str(data_atual), str(hora_atual), latencia, 9, $idMaquinaDado, $idEmpresaDado))
+                            
+                cnx.commit()
+                sql_server_cnx.commit()
+                bdServer_cursor.close()
 
-                    bd_cursor.execute("INSERT INTO Monitoramento (Data_captura, Hora_captura, Dado_Capturado, fkCompMonitorados, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                                     (data_atual, hora_atual, download_mbs, 5, 5, id_maquina_dado, id_empresa_dado))
-                          
-                    bd_cursor.execute("INSERT INTO Monitoramento (Data_captura, Hora_captura, Dado_Capturado, fkCompMonitorados, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                                     (data_atual, hora_atual, upload_mbs, 6, 6, id_maquina_dado, id_empresa_dado))
+                time.sleep(20)
 
-                    bd_cursor.execute("INSERT INTO Monitoramento (Data_captura, Hora_captura, Dado_Capturado, fkCompMonitorados, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                                     (data_atual, hora_atual, latencia, 9, 9, id_maquina_dado, id_empresa_dado))
-
-                    cnx.commit()
-                    bd_cursor.close()
-        
-                    bd_server_cursor = sql_server_cnx.cursor()
-
-                    bd_server_cursor.execute("INSERT INTO Monitoramento (Data_captura, Hora_captura, Dado_Capturado, fkCompMonitorados, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                                            (str(data_atual), str(hora_atual), download_mbs, 5, 5, id_maquina_dado, id_empresa_dado))
-
-                    bd_server_cursor.execute("INSERT INTO Monitoramento (Data_captura, Hora_captura, Dado_Capturado, fkCompMonitorados, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                                            (str(data_atual), str(hora_atual), upload_mbs, 6, 6, id_maquina_dado, id_empresa_dado))
-
-                    bd_server_cursor.execute("INSERT INTO Monitoramento (Data_captura, Hora_captura, Dado_Capturado, fkCompMonitorados, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                                            (str(data_atual), str(hora_atual), latencia, 9, 9, id_maquina_dado, id_empresa_dado))
-
-                    sql_server_cnx.commit()
-                    bd_server_cursor.close()
-
-                    time.sleep(20)
-
-                except Exception as e:
-                    print(f"Ocorreu um erro: {e}")
     """.trimIndent()
-
 
         val nomeArquivoPyDefaultHard = "centrixMonitoramentoHardware.py"
         File(nomeArquivoPyDefaultHard).writeText(codigoPythonDefaultHard)

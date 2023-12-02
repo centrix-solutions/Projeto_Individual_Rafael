@@ -24,7 +24,7 @@ class Monitoramento {
         val cor_roxa = "\u001B[38;2;180;0;255m"
 
         val BANNER_LOGIN =
-            " ${cor_roxa} ██████╗███████╗███╗   ██╗████████╗██████╗ ██╗██╗  ██╗                   \n" +
+            " $cor_roxa ██████╗███████╗███╗   ██╗████████╗██████╗ ██╗██╗  ██╗                   \n" +
                 "██╔════╝██╔════╝████╗  ██║╚══██╔══╝██╔══██╗██║╚██╗██╔╝                   \n" +
                 "██║     █████╗  ██╔██╗ ██║   ██║   ██████╔╝██║ ╚███╔╝                    \n" +
                 "██║     ██╔══╝  ██║╚██╗██║   ██║   ██╔══██╗██║ ██╔██╗                    \n" +
@@ -188,13 +188,13 @@ class Monitoramento {
             }
         }
 
-        iniciarMonitoramento(idMaquina, idEmpresa, fkcomponentesMonitorados, componentesExistentes)
+        iniciarMonitoramento(idMaquina, idEmpresa, componentesExistentes)
     }
 
     private fun iniciarMonitoramento(
         idMaquina: Int,
         idEmpresa: Int,
-        fkcomponentesMonitorados: List<Int>,
+
         componentesExistentes: List<String>
     ) {
         val (arquivo1, arquivo2) = ScriptPadraoPython.criarScript(idMaquina, idEmpresa)
@@ -231,13 +231,11 @@ class Monitoramento {
                     val data = LocalDate.now()
                     val hora = LocalTime.now(zonaFusoHorario)
                     val dado = dados[i]
-                    val fkcompMoni = fkcomponentesMonitorados[i]
                     val fkcompExis = fkcomponentesExistentes[i]
                     repositorioMonitoramento.registrarDados(
                         data,
                         hora,
                         dado,
-                        fkcompMoni,
                         fkcompExis,
                         idMaquina,
                         idEmpresa
