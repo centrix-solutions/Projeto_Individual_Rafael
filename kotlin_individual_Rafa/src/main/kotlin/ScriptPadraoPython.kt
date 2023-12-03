@@ -138,43 +138,38 @@ object ScriptPadraoPython {
 
     """.trimIndent()
 
-        var nomeArquivoPyDefaultHard: String
-        var nomeArquivoPyDefaultRede: String
+        val nomeArquivoPyDefaultHard = "centrixMonitoramentoHardware.py"
+        File(nomeArquivoPyDefaultHard).writeText(codigoPythonDefaultHard)
 
-        if (so.contains("Win")){
+        Thread.sleep(2 * 1000L)
 
-            nomeArquivoPyDefaultHard = "centrixMonitoramentoHardware.py"
-            File(nomeArquivoPyDefaultHard).writeText(codigoPythonDefaultHard)
+        val nomeArquivoPyDefaultRede = "centrixMonitoramentoRede.py"
+        File(nomeArquivoPyDefaultRede).writeText(codigoPythonDefaultRede)
 
-            Thread.sleep(2 * 1000L)
-
-            nomeArquivoPyDefaultRede = "centrixMonitoramentoRede.py"
-            File(nomeArquivoPyDefaultRede).writeText(codigoPythonDefaultRede)
-            }
-        else {
-
-            nomeArquivoPyDefaultHard = "/home/ubuntu/Desktop/centrixMonitoramentoHardware.py"
-            File(nomeArquivoPyDefaultHard).writeText(codigoPythonDefaultHard)
-
-            Thread.sleep(2 * 1000L)
-
-            nomeArquivoPyDefaultRede = "/home/ubuntu/Desktop/centrixMonitoramentoRede.py"
-            File(nomeArquivoPyDefaultRede).writeText(codigoPythonDefaultRede)
-
-            }
         return Pair(nomeArquivoPyDefaultHard, nomeArquivoPyDefaultRede)
+
     }
 
     private val looca = Looca()
     private val so = looca.sistema.sistemaOperacional
-    val executor = if (so.contains("Win")) {
+    private val executor = if (so.contains("Win")) {
         "py"
     } else {
         "python3"
     }
     fun executarScript(arquivo1: String, arquivo2: String) {
-        val pythonProcess1 = Runtime.getRuntime().exec("$executor $arquivo1")
-        val pythonProcess2 = Runtime.getRuntime().exec("$executor $arquivo2")
+
+        val pythonProcess1: Process
+        val pythonProcess2: Process
+
+        if (so.contains("Win")) {
+            pythonProcess1 = Runtime.getRuntime().exec("$executor $arquivo1")
+            pythonProcess2 = Runtime.getRuntime().exec("$executor $arquivo2")
+        } else {
+            pythonProcess2 = Runtime.getRuntime().exec("$executor /home/ubuntu/centrixMonitoramentoRede.py")
+            pythonProcess1 = Runtime.getRuntime().exec("$executor /home/ubuntu/centrixMonitoramentoHardware.py")
+        }
+
         pythonProcesses = listOf(pythonProcess1, pythonProcess2)
     }
 
