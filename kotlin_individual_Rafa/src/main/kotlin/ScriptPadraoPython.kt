@@ -162,13 +162,9 @@ object ScriptPadraoPython {
         val pythonProcess1: Process
         val pythonProcess2: Process
 
-        if (so.contains("Win")) {
-            pythonProcess1 = Runtime.getRuntime().exec("$executor $arquivo1")
-            pythonProcess2 = Runtime.getRuntime().exec("$executor $arquivo2")
-        } else {
+
             pythonProcess1 = Runtime.getRuntime().exec("python3 centrixMonitoramentoHardware.py")
             pythonProcess2 = Runtime.getRuntime().exec("python3 centrixMonitoramentoRede.py")
-        }
 
         pythonProcesses = listOf(pythonProcess1, pythonProcess2)
     }
