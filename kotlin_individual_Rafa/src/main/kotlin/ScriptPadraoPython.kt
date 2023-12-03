@@ -1,5 +1,7 @@
+
 import Conexao.bancoSenha
 import Conexao.bancoUser
+import com.github.britooo.looca.api.core.Looca
 import java.io.File
 
 object ScriptPadraoPython {
@@ -148,9 +150,16 @@ object ScriptPadraoPython {
 
     }
 
+    private val looca = Looca()
+    private val so = looca.sistema.sistemaOperacional
+    val executor = if (so.contains("Win")) {
+        "py"
+    } else {
+        "python3"
+    }
     fun executarScript(arquivo1: String, arquivo2: String) {
-        val pythonProcess1 = Runtime.getRuntime().exec("py $arquivo1")
-        val pythonProcess2 = Runtime.getRuntime().exec("py $arquivo2")
+        val pythonProcess1 = Runtime.getRuntime().exec("$executor $arquivo1")
+        val pythonProcess2 = Runtime.getRuntime().exec("$executor $arquivo2")
         pythonProcesses = listOf(pythonProcess1, pythonProcess2)
     }
 
