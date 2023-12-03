@@ -25,35 +25,35 @@ while(True):
     bd = cnx.cursor()
     bdServer_cursor = sql_server_cnx.cursor()
                 
-    dados_DOWNLOAD_PC = [download_mbs, 5, 7, 1]
+    dados_DOWNLOAD_PC = [download_mbs, 5, 3, 1]
 
     add_leitura_DOWNLOAD = ("INSERT INTO Monitoramento"
                            "(Data_captura, Hora_captura, Dado_Capturado, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni)"
                            "VALUES (%s, %s, %s, %s, %s, %s)")
                
-    bd.execute(add_leitura_DOWNLOAD, (data_atual, hora_atual, download_mbs, 5, 7, 1))
-    bdServer_cursor.execute(add_leitura_DOWNLOAD, (str(data_atual), str(hora_atual), download_mbs, 5, 7, 1))
+    bd.execute(add_leitura_DOWNLOAD, (data_atual, hora_atual, download_mbs, 5, 3, 1))
+    bdServer_cursor.execute(add_leitura_DOWNLOAD, (str(data_atual), str(hora_atual), download_mbs, 5, 3, 1))
                 
    
-    dados_UPLOAD_PC = [upload_mbs, 6, 7, 1]
+    dados_UPLOAD_PC = [upload_mbs, 6, 3, 1]
 
     add_leitura_UPLOAD = ("INSERT INTO Monitoramento"
                          "(Data_captura, Hora_captura, Dado_Capturado, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni)"
                          "VALUES (%s, %s, %s, %s, %s, %s)")
                 
-    bd.execute(add_leitura_UPLOAD, (data_atual, hora_atual, upload_mbs, 6, 7, 1))
+    bd.execute(add_leitura_UPLOAD, (data_atual, hora_atual, upload_mbs, 6, 3, 1))
 
-    bdServer_cursor.execute(add_leitura_UPLOAD, (str(data_atual), str(hora_atual), upload_mbs, 6, 7, 1))
+    bdServer_cursor.execute(add_leitura_UPLOAD, (str(data_atual), str(hora_atual), upload_mbs, 6, 3, 1))
     
-    dados_LATENCIA_PC = [latencia, 9, 7, 1]
+    dados_LATENCIA_PC = [latencia, 9, 3, 1]
     
     add_leitura_LATENCIA = ("INSERT INTO Monitoramento"
                           "(Data_captura, Hora_captura, Dado_Capturado, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni)"
                           "VALUES (%s, %s, %s, %s, %s, %s)")
                 
-    bd.execute(add_leitura_LATENCIA, (data_atual, hora_atual, upload_mbs, 9, 7, 1))
+    bd.execute(add_leitura_LATENCIA, (data_atual, hora_atual, upload_mbs, 9, 3, 1))
     
-    bdServer_cursor.execute(add_leitura_LATENCIA, (str(data_atual), str(hora_atual), latencia, 9, 7, 1))
+    bdServer_cursor.execute(add_leitura_LATENCIA, (str(data_atual), str(hora_atual), latencia, 9, 3, 1))
                 
     cnx.commit()
     sql_server_cnx.commit()

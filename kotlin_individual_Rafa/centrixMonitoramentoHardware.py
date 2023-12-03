@@ -24,14 +24,14 @@ while True:
         "(Data_captura, Hora_captura, Dado_Capturado, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni)"
         "VALUES (%s, %s, %s, %s, %s, %s)"
     )
-    bdLocal_cursor.execute(add_leitura_CPU, (data_atual, hora_atual, CPU, 1, 7, 1))
+    bdLocal_cursor.execute(add_leitura_CPU, (data_atual, hora_atual, CPU, 1, 3, 1))
 
     add_leitura_RAM = (
         "INSERT INTO Monitoramento"
         "(Data_captura, Hora_captura, Dado_Capturado, fkCompMoniExistentes, fkMaqCompMoni, fkEmpMaqCompMoni)"
         "VALUES (%s, %s, %s, %s, %s, %s)"
     )
-    bdLocal_cursor.execute(add_leitura_RAM, (data_atual, hora_atual, RAM, 3, 7, 1))
+    bdLocal_cursor.execute(add_leitura_RAM, (data_atual, hora_atual, RAM, 3, 3, 1))
 
     add_leitura_DISK = (
         "INSERT INTO Monitoramento"
@@ -39,18 +39,18 @@ while True:
         "VALUES (%s, %s, %s, %s, %s, %s)"
     )
     
-    bdLocal_cursor.execute(add_leitura_DISK, (data_atual, hora_atual, DISK, 2, 7, 1))
+    bdLocal_cursor.execute(add_leitura_DISK, (data_atual, hora_atual, DISK, 2, 3, 1))
     bdLocal_cursor.close()
 
     mysql_cnx.commit()
 
     bdServer_cursor = sql_server_cnx.cursor()
     
-    bdServer_cursor.execute(add_leitura_CPU, (str(data_atual), str(hora_atual), CPU, 1, 7, 1))
+    bdServer_cursor.execute(add_leitura_CPU, (str(data_atual), str(hora_atual), CPU, 1, 3, 1))
 
-    bdServer_cursor.execute(add_leitura_RAM, (str(data_atual), str(hora_atual), RAM, 3, 7, 1))
+    bdServer_cursor.execute(add_leitura_RAM, (str(data_atual), str(hora_atual), RAM, 3, 3, 1))
 
-    bdServer_cursor.execute(add_leitura_DISK, (str(data_atual), str(hora_atual), DISK, 2, 7, 1))
+    bdServer_cursor.execute(add_leitura_DISK, (str(data_atual), str(hora_atual), DISK, 2, 3, 1))
     
     bdServer_cursor.close()
 
