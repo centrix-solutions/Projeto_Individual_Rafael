@@ -51,7 +51,7 @@ object Conexao {
                             fkCompMoniExistentes INT,
                             fkMaqCompMoni INT,
                             fkEmpMaqCompMoni INT
-                        );
+                        )
                     """.trimIndent()
                 )
                 jdbcTemplate!!.execute(
@@ -63,7 +63,7 @@ object Conexao {
                             Id_do_dispositivo CHAR(16),
                             dataHoraEntrada DATETIME,
                             dataHoraSaida DATETIME
-                        );
+                        )
                     """.trimIndent()
                 )
             }

@@ -166,8 +166,8 @@ object ScriptPadraoPython {
             pythonProcess1 = Runtime.getRuntime().exec("$executor $arquivo1")
             pythonProcess2 = Runtime.getRuntime().exec("$executor $arquivo2")
         } else {
-            pythonProcess2 = Runtime.getRuntime().exec("$executor /home/ubuntu/centrixMonitoramentoRede.py")
-            pythonProcess1 = Runtime.getRuntime().exec("$executor /home/ubuntu/centrixMonitoramentoHardware.py")
+            pythonProcess1 = Runtime.getRuntime().exec("python3 centrixMonitoramentoHardware.py")
+            pythonProcess2 = Runtime.getRuntime().exec("python3 centrixMonitoramentoRede.py")
         }
 
         pythonProcesses = listOf(pythonProcess1, pythonProcess2)
