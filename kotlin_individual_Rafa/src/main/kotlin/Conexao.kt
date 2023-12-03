@@ -13,7 +13,7 @@ object Conexao {
     val bancoSenha = if (so.contains("Win")) {
         "38762"
     } else {
-        "ubuntu"
+        "urubu100"
     }
     private var bancoUserServer = "sa"
     private var bancoSenhaServer = "centrix"
