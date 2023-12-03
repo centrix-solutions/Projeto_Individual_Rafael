@@ -138,16 +138,30 @@ object ScriptPadraoPython {
 
     """.trimIndent()
 
-        val nomeArquivoPyDefaultHard = "centrixMonitoramentoHardware.py"
-        File(nomeArquivoPyDefaultHard).writeText(codigoPythonDefaultHard)
+        var nomeArquivoPyDefaultHard = ""
+        var nomeArquivoPyDefaultRede = ""
 
-        Thread.sleep(2 * 1000L)
+        if (so.contains("Win")){
 
-        val nomeArquivoPyDefaultRede = "centrixMonitoramentoRede.py"
-        File(nomeArquivoPyDefaultRede).writeText(codigoPythonDefaultRede)
+            nomeArquivoPyDefaultHard = "centrixMonitoramentoHardware.py"
+            File(nomeArquivoPyDefaultHard).writeText(codigoPythonDefaultHard)
 
+            Thread.sleep(2 * 1000L)
+
+            nomeArquivoPyDefaultRede = "centrixMonitoramentoRede.py"
+            File(nomeArquivoPyDefaultRede).writeText(codigoPythonDefaultRede)
+            }
+        else {
+            nomeArquivoPyDefaultHard = System.getProperty("user.home") + "/Desktop/centrixMonitoramentoHardware.py"
+            File(nomeArquivoPyDefaultHard).writeText(codigoPythonDefaultHard)
+
+            Thread.sleep(2 * 1000L)
+
+            nomeArquivoPyDefaultRede = System.getProperty("user.home") + "/Desktop/centrixMonitoramentoRede.py"
+            File(nomeArquivoPyDefaultRede).writeText(codigoPythonDefaultRede)
+
+            }
         return Pair(nomeArquivoPyDefaultHard, nomeArquivoPyDefaultRede)
-
     }
 
     private val looca = Looca()
