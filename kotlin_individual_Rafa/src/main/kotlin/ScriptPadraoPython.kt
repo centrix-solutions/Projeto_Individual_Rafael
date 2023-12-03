@@ -138,8 +138,8 @@ object ScriptPadraoPython {
 
     """.trimIndent()
 
-        var nomeArquivoPyDefaultHard = ""
-        var nomeArquivoPyDefaultRede = ""
+        var nomeArquivoPyDefaultHard: String
+        var nomeArquivoPyDefaultRede: String
 
         if (so.contains("Win")){
 
@@ -152,12 +152,13 @@ object ScriptPadraoPython {
             File(nomeArquivoPyDefaultRede).writeText(codigoPythonDefaultRede)
             }
         else {
-            nomeArquivoPyDefaultHard = System.getProperty("user.home") + "/Desktop/centrixMonitoramentoHardware.py"
+
+            nomeArquivoPyDefaultHard = "/home/ubuntu/Desktop/centrixMonitoramentoHardware.py"
             File(nomeArquivoPyDefaultHard).writeText(codigoPythonDefaultHard)
 
             Thread.sleep(2 * 1000L)
 
-            nomeArquivoPyDefaultRede = System.getProperty("user.home") + "/Desktop/centrixMonitoramentoRede.py"
+            nomeArquivoPyDefaultRede = "/home/ubuntu/Desktop/centrixMonitoramentoRede.py"
             File(nomeArquivoPyDefaultRede).writeText(codigoPythonDefaultRede)
 
             }
