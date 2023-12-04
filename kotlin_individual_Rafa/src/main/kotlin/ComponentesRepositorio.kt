@@ -20,22 +20,6 @@ class ComponentesRepositorio {
         )
     }
 
-    fun buscarComponetesMaq(idMaquina: Int): List<Int> {
-        return jdbcTemplateServer.queryForList(
-            "SELECT fkComponentesExistentes FROM maquinas AS m JOIN componentes_monitorados AS c ON m.idMaquina = c.FKMaquina WHERE idMaquina = ?;",
-            arrayOf(idMaquina),
-            Int::class.java
-        )
-    }
-
-    fun buscarIdComp(fkEmpresa: Int, fkMaquina: Int, fkComponentesExistentes: Int): Int {
-        return jdbcTemplateServer.queryForObject(
-            "SELECT idComponente_monitorado FROM componentes_monitorados WHERE fkEmpMaqComp = ? AND fkMaquina = ? AND fkComponentesExistentes = ?;",
-            arrayOf(fkEmpresa, fkMaquina, fkComponentesExistentes),
-            Int::class.java
-        )
-    }
-
     fun registrarComponente(valor: Double, fkComponente: Int, idMaq: Int, novaMaquina: Maquina) {
         jdbcTemplateServer.update(
             """
