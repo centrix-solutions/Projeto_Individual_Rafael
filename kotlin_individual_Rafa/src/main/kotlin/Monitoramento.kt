@@ -21,7 +21,7 @@ class Monitoramento {
 
 
     companion object {
-        val cor_roxa = "\u001B[38;2;180;0;255m"
+        private val cor_roxa = "\u001B[38;2;180;0;255m"
 
         val BANNER_LOGIN =
             " $cor_roxa ██████╗███████╗███╗   ██╗████████╗██████╗ ██╗██╗  ██╗                   \n" +
@@ -171,22 +171,10 @@ class Monitoramento {
 
         repositorioUser.registrarLogin(usuarioLogado, idMaquina, maquinaSpecs, horaLogin)
 
-        val componentesExistentes: MutableList<String> = mutableListOf()
-        val fkcomponentesMonitorados: MutableList<Int> = mutableListOf()
-        val componentes: List<Int> = repositorioComponentes.buscarComponetesMaq(idMaquina)
-        val nomeComponentes: List<String> =
-            listOf("Cpu", "Disco", "Ram", "Usb", "Taxa Download", "Taxa Upload", "Janelas do Sistema", "Processos", "Latência")
-        componentes.forEach {
-            componentesExistentes.add(nomeComponentes[it - 1])
-            when (it) {
-                4 -> {
-                    fkcomponentesMonitorados.add(repositorioComponentes.buscarIdComp(idEmpresa, idMaquina, it))
-                }
 
-                7 -> fkcomponentesMonitorados.add(repositorioComponentes.buscarIdComp(idEmpresa, idMaquina, it))
-                8 -> fkcomponentesMonitorados.add(repositorioComponentes.buscarIdComp(idEmpresa, idMaquina, it))
-            }
-        }
+        val componentesExistentes: List<String> =
+            listOf("Cpu", "Disco", "Ram", "Usb", "Taxa Download", "Taxa Upload", "Janelas do Sistema", "Processos", "Latência")
+
 
         iniciarMonitoramento(idMaquina, idEmpresa, componentesExistentes)
     }
