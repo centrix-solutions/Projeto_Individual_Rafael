@@ -92,7 +92,7 @@ object ScriptPadraoPython {
                 upload_mbs = round(upload / (10**6), 2)
                 
                 latencia = speed_test.results.ping
-                
+                 
                 data_e_hora_atuais = datetime.now()
                 data_atual = data_e_hora_atuais.date()
                 hora_atual = data_e_hora_atuais.time()
@@ -162,9 +162,13 @@ object ScriptPadraoPython {
         val pythonProcess1: Process
         val pythonProcess2: Process
 
-
+        if (so.contains("Win")) {
+            pythonProcess1 = Runtime.getRuntime().exec("$executor $arquivo1")
+            pythonProcess2 = Runtime.getRuntime().exec("$executor $arquivo2")
+        } else {
             pythonProcess1 = Runtime.getRuntime().exec("python3 centrixMonitoramentoHardware.py")
             pythonProcess2 = Runtime.getRuntime().exec("python3 centrixMonitoramentoRede.py")
+        }
 
         pythonProcesses = listOf(pythonProcess1, pythonProcess2)
     }
